@@ -2,6 +2,8 @@
 #define __GEOMETRY_H__
 
 #include <cmath>
+#include <vector>
+#include <ostream>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +48,8 @@ typedef Vec2<int>   Vec2i;
 typedef Vec3<float> Vec3f;
 typedef Vec3<int>   Vec3i;
 
+Vec3f cross(Vec3f A, Vec3f B);
+
 template <class t> std::ostream& operator<<(std::ostream& s, Vec2<t>& v) {
 	s << "(" << v.x << ", " << v.y << ")\n";
 	return s;
@@ -55,5 +59,37 @@ template <class t> std::ostream& operator<<(std::ostream& s, Vec3<t>& v) {
 	s << "(" << v.x << ", " << v.y << ", " << v.z << ")\n";
 	return s;
 }
+
+
+
+class Matrix
+{
+public:
+	Matrix(const int r, const int c);
+	std::vector<float>& operator [](const int i) { return m[i];};
+	
+	Matrix operator*(const Matrix &mat);
+	
+	inline int nrows() {return rows;};
+	inline int ncols() {return cols;};
+
+	Vec3f toVec();
+	Matrix transpose();
+
+	Matrix inverse();
+
+	static Matrix v2m(const Vec3f v);
+	static Matrix identity(int dimensions = 4);
+	static Matrix camLookAt(Vec3f eye, Vec3f target, Vec3f up);
+	static Matrix viewport(int width, int height, int x, int y);
+	int rows;
+	int cols;
+	
+	std::vector<std::vector<float>> m;
+	
+	
+};
+
+Matrix v2m(Vec3f v);
 
 #endif //__GEOMETRY_H__

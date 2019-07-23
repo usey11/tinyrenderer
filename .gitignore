@@ -1,3 +1,5 @@
 *.o
 framebuffer.tga
 main
+output.tga
+.vscode/

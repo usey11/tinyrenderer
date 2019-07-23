@@ -30,5 +30,4 @@ void drawTriangle(Vec2i* pts, TGAImage &image, TGAColor color);
 
 Vec3f barycentric(Vec2i *pts, Vec2i P);
 Vec3f barycentric(Vec3f A, Vec3f B, Vec3f C, Vec3f P); 
-Vec3f cross(Vec3f A, Vec3f B);
 

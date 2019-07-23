@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include <algorithm>
+#include <iostream>
 
 const TGAColor white = TGAColor(255, 255, 255, 255);
 const TGAColor red   = TGAColor(255, 0,   0,   255);
@@ -53,12 +54,6 @@ void drawLine(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor color)
 void drawLine(Vec2i v0, Vec2i v1, TGAImage &image, TGAColor color)
 {
     drawLine(v0.x, v0.y, v1.x, v1.y, image, color);
-}
-
-
-Vec3f cross(Vec3f A, Vec3f B)
-{
-    return Vec3f(A.y*B.z-A.z*B.y, B.x*A.z-A.x*B.z, A.x*B.y-A.y*B.x);
 }
 
 Vec3f barycentric(Vec2i *pts, Vec2i P)
@@ -200,9 +195,11 @@ void Renderer::drawTriangle(Vec3f* pts, TGAColor color)
 
 void Renderer::drawTriangle(Vec3f* pts, Vec2f* uvs)
 {
+    int height = image.get_height();
+    int width = image.get_width();
     Vec2f bboxmin( std::numeric_limits<float>::max(),  std::numeric_limits<float>::max());
     Vec2f bboxmax(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
-    Vec2f clamp(image.get_width()-1, image.get_height()-1);
+    Vec2f clamp(width-1, height-1);
     for (int i=0; i<3; i++) {
         for (int j=0; j<2; j++) {
             (j == 0 ? bboxmin.x :bboxmin.y) = std::max(0.f,        std::min(bboxmin[j], pts[i][j]));
@@ -211,6 +208,7 @@ void Renderer::drawTriangle(Vec3f* pts, Vec2f* uvs)
     }
 
     Vec3f P;
+    Vec3f K;
     Vec2f dtp;
     for (P.x=bboxmin.x; P.x<=bboxmax.x; P.x++) {
         for (P.y=bboxmin.y; P.y<=bboxmax.y; P.y++) {
@@ -219,8 +217,9 @@ void Renderer::drawTriangle(Vec3f* pts, Vec2f* uvs)
             P.z = 0;
             for (int i=0; i<3; i++) P.z += pts[i][2]*bc_screen[i];
             
+            // Diffuse Texturemap Position
             dtp = uvs[0] * bc_screen[0] + uvs[1] * bc_screen[1] + uvs[2] * bc_screen[2];
-
+            
             if (zBuf[int(P.x)][int(P.y)] < P.z) {
                 zBuf[int(P.x)][int(P.y)] = P.z;
                 image.set(P.x, P.y, model->diffuse(dtp));
@@ -229,10 +228,36 @@ void Renderer::drawTriangle(Vec3f* pts, Vec2f* uvs)
     }
 }
 
+void printMat(Matrix &m)
+{
+    for(int i = 0; i<4;i++)
+    {
+        for( int j = 0; j <4; j++)
+        {
+            std::cout << m[i][j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
 void Renderer::drawModel()
 {
     const int width = image.get_width();
     const int height = image.get_height();
+
+    Matrix perspective = Matrix::identity();
+    Matrix viewport = Matrix::viewport(width,height,0,0);
+    //Matrix viewport = Matrix::viewport(width*3/4, height*3/4, width/8, height/8);
+
+    // camera position on z axis
+    Vec3f eye(.5f, 0.2f, 1.f);
+    perspective[3][2] = -1.f/1.f;
+
+    Matrix view = Matrix::camLookAt(Vec3f(0.f,1.f,0.f), Vec3f(0.f,0.f,0.f), eye);
+    printMat(view);
+    printMat(perspective);
+    printMat(viewport);
 
     for (int i=0; i<model->nfaces(); i++)
     {
@@ -245,7 +270,12 @@ void Renderer::drawModel()
         for (int j=0; j<3; j++) {
             // Spatial
             Vec3f v = model->vert(face[j]);
-            screen_coords[j] = Vec3f(int((v.x+1.)*width/2.+.5), int((v.y+1.)*height/2.+.5), v.z);
+            //std::cout << v.x << ", " << v.y << ", " << v.z << std::endl;
+            v = (viewport * perspective * view * Matrix::v2m(v)).toVec();
+            //std::cout << v.x << ", " << v.y << ", " << v.z << std::endl;
+            
+            //screen_coords[j] = Vec3f(int((v.x+1.)*width/2.+.5), int((v.y+1.)*height/2.+.5), v.z);
+            screen_coords[j] = Vec3f(int(v.x), int(v.y), int(v.z));
             world_coords[j] = v;
 
             // Diffuse
