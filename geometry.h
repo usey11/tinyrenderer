@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <vector>
-#include <ostream>
+#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -65,6 +65,7 @@ template <class t> std::ostream& operator<<(std::ostream& s, Vec3<t>& v) {
 class Matrix
 {
 public:
+	Matrix();
 	Matrix(const int r, const int c);
 	std::vector<float>& operator [](const int i) { return m[i];};
 	
@@ -87,7 +88,18 @@ public:
 	
 	std::vector<std::vector<float>> m;
 	
-	
+	void print()
+	{
+		for(int i = 0; i<4;i++)
+		{
+			for( int j = 0; j <4; j++)
+			{
+				std::cout << m[i][j] << "  ";
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	}
 };
 
 Matrix v2m(Vec3f v);

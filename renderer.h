@@ -3,22 +3,32 @@
 #include <vector>
 #include "model.h"
 
+class ModelShader;
+
 class Renderer
 {
     public:
     Renderer(TGAImage &image_);
     Renderer(TGAImage &image_, Model* model_);
     
-    void drawTriangle(Vec2i* pts, TGAColor color);
     void drawTriangle(Vec3f* pts, TGAColor color);
     void drawTriangle(Vec3f* pts, Vec2f* uvs);
+    void drawTriangle(Vec3f* pts, TGAColor* vCols);
+
+    void drawTriangle(Vec3f* pts, ModelShader* shader);
 
     void drawModel();
-    
+
+
     private:
+
+    ModelShader *shader;
+
     std::vector<std::vector<float>> zBuf;
     TGAImage &image;
     Model* model;
+
+    void init();
 
     //float *zbuffer;
 };

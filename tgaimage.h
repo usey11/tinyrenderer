@@ -58,11 +58,27 @@ struct TGAColor {
 		return *this;
 	}
 
+	TGAColor operator *(float s) const
+	{
+		return TGAColor(r * s, g *s, b*s, a*s);
+	}
+
+	TGAColor operator +(const TGAColor &c)
+	{
+		return TGAColor(r + c.r, g + c.g, b + c.b, a + c.a);
+	}
+
 	unsigned char& operator [](const int i) {
 		return raw[i];
 	}
 };
 
+
+const TGAColor white = TGAColor(255, 255, 255, 255);
+const TGAColor red   = TGAColor(255, 0,   0,   255);
+const TGAColor blue  = TGAColor(0  , 0, 255,   255);
+const TGAColor green = TGAColor(0  , 255, 0,   255);
+const TGAColor purple = TGAColor(223  , 3,252,   255);
 
 class TGAImage {
 protected:

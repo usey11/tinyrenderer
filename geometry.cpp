@@ -6,6 +6,12 @@ Vec3f cross(Vec3f A, Vec3f B)
     return Vec3f(A.y*B.z-A.z*B.y, B.x*A.z-A.x*B.z, A.x*B.y-A.y*B.x);
 }
 
+Matrix::Matrix()
+:Matrix(0,0)
+{
+
+}
+
 Matrix::Matrix(int r, int c)
     :m(std::vector<std::vector<float>>(r, std::vector<float>(c, 0.f)))
 {
