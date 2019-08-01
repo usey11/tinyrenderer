@@ -138,7 +138,8 @@ Renderer::Renderer(TGAImage &image_, Model* model_)
 
 void Renderer::init()
 {
-    shader = new SimpleModelShader(model,image.get_width(), image.get_height(), Vec3f(-1.f, -1.f, -1.f));
+    shader = new TextureModelShader(model,image.get_width(), image.get_height(),
+        Vec3f(-1.f, -1.f, -1.f));
 }
 
 void Renderer::drawTriangle(Vec3f* pts, TGAColor color)
@@ -295,13 +296,8 @@ void Renderer::drawModel()
 
         for (int j=0; j<3; j++) {
             screen_coords[j] = shader->vertexShader(i, j);
-            //vCols[j] =  shader->fragShader(i, j);
-            // Diffuse
-            //uvs[j] = model->uv(i, j);
         }
-
-        //drawTriangle(screen_coords, uvs);
-        drawTriangle(screen_coords, vCols);
+        drawTriangle(screen_coords, shader);
     }
 }
 
