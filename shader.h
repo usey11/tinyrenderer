@@ -16,29 +16,25 @@ protected:
 class SimpleModelShader : public ModelShader
 {
 public:
-    SimpleModelShader(Model *model_, int viewportWidth_, int viewportHeight_, Vec3f lightDir_ = Vec3f(0.f, -1.f, 0.f));
+    SimpleModelShader(Model *model_, Vec3f lightDir_ = Vec3f(0.f, -1.f, 0.f));
     virtual Vec3f vertexShader(int face, int vertIndex) override;
     virtual TGAColor fragShader(Vec3f barCoords) override;
 
 protected:
     // Passed between shader (varying)
     Vec3f vertCoords[3];
-    Vec2f uv[3];
-    Vec3f normal[3];
+    Vec2f uvs[3];
+    Vec3f normals[3];
     Vec3f intensity;
-    int viewportWidth;
-    int viewportHeight;
 
     Vec3f eye;
     Vec3f lightDir;
     
     Matrix perspective;
-    Matrix viewport;
     Matrix view;
+    Matrix viewport;
     // Transformation Matrix
     Matrix M;
-    // With viewport
-    Matrix vM;
     // Transformation Matrix Inverse Transpose
     Matrix MIT;
 
@@ -56,12 +52,12 @@ class TextureModelShader : public SimpleModelShader
 {
 public:
     //using SimpleModelShader::SimpleModelShader;
-    TextureModelShader(Model *model_, int viewportWidth_, int viewportHeight_,
-        Vec3f lightDir_ = Vec3f(0.f, -1.f, 0.f));
+    TextureModelShader(Model *model_, Vec3f lightDir_ = Vec3f(0.f, -1.f, 0.f));
     
     virtual Vec3f vertexShader(int face, int vertIndex) override;
     virtual TGAColor fragShader(Vec3f barCoords) override;
 
 protected:
     Vec3f viewDir[3];
+    Vec3f worldCoords[3];
 };

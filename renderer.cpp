@@ -138,8 +138,11 @@ Renderer::Renderer(TGAImage &image_, Model* model_)
 
 void Renderer::init()
 {
-    shader = new TextureModelShader(model,image.get_width(), image.get_height(),
-        Vec3f(0.f, 0.f, -1.f));
+    // Initilize shader
+    shader = new TextureModelShader(model, Vec3f(0.f, 0.f, -1.f));
+
+    viewport = Matrix::viewport(image.get_width(), image.get_height(), 0, 0);
+
 }
 
 void Renderer::drawTriangle(Vec3f* pts, TGAColor color)
@@ -288,6 +291,9 @@ void Renderer::drawModel()
     {
         std::vector<int> face = model->face(i);
         Vec3f screen_coords[3];
+        // Temp
+        Vec3f worldCoords;
+        Vec3f v;
         TGAColor vCols[3];
         vCols[0] = red;
         vCols[1] = green;
@@ -295,7 +301,9 @@ void Renderer::drawModel()
         //Vec2f uvs[3];
 
         for (int j=0; j<3; j++) {
-            screen_coords[j] = shader->vertexShader(i, j);
+            // Convert to screen coordinates
+            v = (viewport * Matrix::v2m(shader->vertexShader(i, j))).toVec();
+            screen_coords[j] = Vec3f(int(v.x), int(v.y), int(v.z));
         }
         drawTriangle(screen_coords, shader);
     }

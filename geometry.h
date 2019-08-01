@@ -70,6 +70,7 @@ public:
 	std::vector<float>& operator [](const int i) { return m[i];};
 	
 	Matrix operator*(const Matrix &mat);
+	//Matrix operator*();
 	
 	inline int nrows() {return rows;};
 	inline int ncols() {return cols;};
