@@ -37,6 +37,8 @@ protected:
     Matrix view;
     // Transformation Matrix
     Matrix M;
+    // With viewport
+    Matrix vM;
     // Transformation Matrix Inverse Transpose
     Matrix MIT;
 

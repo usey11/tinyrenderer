@@ -139,7 +139,7 @@ Renderer::Renderer(TGAImage &image_, Model* model_)
 void Renderer::init()
 {
     shader = new TextureModelShader(model,image.get_width(), image.get_height(),
-        Vec3f(0.f, -1.f, -1.f));
+        Vec3f(0.f, 0.f, -1.f));
 }
 
 void Renderer::drawTriangle(Vec3f* pts, TGAColor color)
