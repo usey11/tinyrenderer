@@ -35,6 +35,10 @@ protected:
     Matrix perspective;
     Matrix viewport;
     Matrix view;
+    // Transformation Matrix
+    Matrix M;
+    // Transformation Matrix Inverse Transpose
+    Matrix MIT;
 
     void initMatrices();
 };
