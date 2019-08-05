@@ -19,13 +19,17 @@ Matrix::Matrix(int r, int c)
     cols = c;
 }
 
-Matrix Matrix::v2m(Vec3f v)
+Matrix Matrix::v2m(Vec3f v, bool homo)
 {
-    Matrix mat(4,1);
+    Matrix mat(homo ? 4 : 3,1);
 
     mat[0][0] = v[0];
     mat[1][0] = v[1];
     mat[2][0] = v[2];
+
+    if (homo ==  false)
+        return mat;
+        
     mat[3][0] = 1.0f;
 
     return mat;
@@ -71,6 +75,22 @@ Matrix Matrix::operator*(const Matrix &mat)
 
     return result;
 }
+
+Vec3f Matrix::operator*(const Vec3f &v)
+{
+    if (rows != 4)
+        throw "Matrix invalid size";
+
+    auto r = (*this) * Matrix::v2m(v);
+    return r.toVec();
+}
+
+void Matrix::setCol(int c, float v[])
+{
+    for(int i = 0 ; i < rows; i++)
+        m[i][c] = v[i];
+}
+
 
 Matrix Matrix::identity(int dimensions)
 {

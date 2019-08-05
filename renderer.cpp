@@ -139,7 +139,7 @@ Renderer::Renderer(TGAImage &image_, Model* model_)
 void Renderer::init()
 {
     // Initilize shader
-    shader = new TextureModelShader(model, Vec3f(0.f, 0.f, -1.f));
+    shader = new TextureModelShader(model, Vec3f(-1.f, -1.f, -1.f));
 
     viewport = Matrix::viewport(image.get_width(), image.get_height(), 0, 0);
 

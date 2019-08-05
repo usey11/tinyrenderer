@@ -4,6 +4,7 @@
 #include <string>
 #include "geometry.h"
 #include "tgaimage.h"
+const bool TANGENT_SPACE = false;
 
 class Model {
 private:

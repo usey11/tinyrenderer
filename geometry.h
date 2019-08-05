@@ -70,7 +70,9 @@ public:
 	std::vector<float>& operator [](const int i) { return m[i];};
 	
 	Matrix operator*(const Matrix &mat);
-	//Matrix operator*();
+	Vec3f operator*(const Vec3f &v);
+
+	void setCol(int c, float v[]);
 	
 	inline int nrows() {return rows;};
 	inline int ncols() {return cols;};
@@ -80,7 +82,7 @@ public:
 
 	Matrix inverse();
 
-	static Matrix v2m(const Vec3f v);
+	static Matrix v2m(const Vec3f v, bool homo = true);
 	static Matrix identity(int dimensions = 4);
 	static Matrix camLookAt(Vec3f eye, Vec3f target, Vec3f up);
 	static Matrix viewport(int width, int height, int x, int y);
@@ -91,9 +93,9 @@ public:
 	
 	void print()
 	{
-		for(int i = 0; i<4;i++)
+		for(int i = 0; i<rows;i++)
 		{
-			for( int j = 0; j <4; j++)
+			for( int j = 0; j <cols; j++)
 			{
 				std::cout << m[i][j] << "  ";
 			}

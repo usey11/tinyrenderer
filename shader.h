@@ -51,8 +51,8 @@ public:
 class TextureModelShader : public SimpleModelShader
 {
 public:
-    //using SimpleModelShader::SimpleModelShader;
-    TextureModelShader(Model *model_, Vec3f lightDir_ = Vec3f(0.f, -1.f, 0.f));
+    using SimpleModelShader::SimpleModelShader;
+    //TextureModelShader(Model *model_, Vec3f lightDir_ = Vec3f(0.f, -1.f, 0.f));
     
     virtual Vec3f vertexShader(int face, int vertIndex) override;
     virtual TGAColor fragShader(Vec3f barCoords) override;
